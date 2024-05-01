@@ -10,7 +10,7 @@
 
 ## Rodar a aplicação
 - Instalar o mysql
-- git clone https://github.com/MarkusLima/banco-digital
+- git clone https://github.com/MarkusLima/nodeJS_Mysql_SocketIo
 - Execute npm install
 - Execute npm run test //TESTS
 - Execute npm run dev // NODEMON
