@@ -1,5 +1,6 @@
 const { User } = require('../model/userModel');
 const { encryptAES } = require('../config/encrypt');
+const { dateNow, gerarLetrasAleatorias } = require('../config/tools');
 
 /**
 * @swagger
@@ -53,7 +54,10 @@ exports.login = async (req, res) => {
         });
 
         if (user) {
-          return res.status(200).json({ hash: encryptAES(user.email), host: process.env.HOST +":"+ process.env.PORT +"/chat/"+ encryptAES(user.email) });
+          user.generated_token = dateNow();
+          user.token = gerarLetrasAleatorias(45);
+          user.save();
+          return res.status(200).json({ hash: user.token, host: process.env.HOST +":"+ process.env.PORT +"/chat/"+ user.token });
         } else {
           return res.status(404).json({ error: 'User not found' });
         }
@@ -61,7 +65,7 @@ exports.login = async (req, res) => {
     } catch (error) {
 
         console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: error });
 
     }
 

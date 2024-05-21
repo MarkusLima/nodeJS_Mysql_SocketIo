@@ -2,7 +2,8 @@ const { User } = require('../model/userModel');
 const { Room } = require('../model/roomModel');
 const { decryptAES } = require('../config/encrypt');
 const { sleep, gerarLetrasAleatorias } = require('../config/tools');
-const { CreateOrUpdate } = require('../model/roomModel')
+const { CreateOrUpdate } = require('../model/roomModel');
+const { passouUmDia } = require('../config/tools');
 
 exports.home = async (req, res) => {
 
@@ -13,15 +14,17 @@ exports.home = async (req, res) => {
 
     try {
 
-        //desencripta o hash
-        var email = decryptAES(req.params.hash);
-
         // Procura no banco se existe usuário com o email
         const user = await User.findOne({
-            where: { email: email }
+            where: { token: req.params.hash }
         });
         
         if (user) {
+
+            //verifica se ja se passou um dia após a geração do token
+            if ( passouUmDia(user.generated_token)) {
+                return res.status(404).json({ error: 'Expired Token' });
+            }
             
             //verifica se usuário ja esta dentro do chat
             const isInRoom = await Room.findOne({

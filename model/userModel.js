@@ -13,10 +13,23 @@ const User = sequelize.define('user', {
       allowNull: false,
       unique: true
     },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    generated_token: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false
     }
+}, {
+  defaultScope: {
+    attributes: { exclude: ['password'] }
+  }
 });
 
 module.exports = { User, sequelize };

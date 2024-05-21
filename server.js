@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const dotenv = require('dotenv');
 const { sequelize } = require('./model/model');
 const { Room, CreateOrUpdate, Destroy } = require('./model/roomModel');
+const { containsHtmlTags } = require('./config/tools');
 dotenv.config();
 
 const app = express();
@@ -66,7 +67,15 @@ socketIo.on('connection', (socket) => {
   // Read message recieved from client.
   socket.on('message_from_client', (data) => {
     console.log('message_from_client: ', data);
-    socket.broadcast.emit('message_from_server', data);
+    if ( containsHtmlTags(data) ) {
+
+       socket.emit('message_from_server', "Você mandou um codigo malicioso!");
+
+    } else {
+
+      socket.broadcast.emit('message_from_server', data);
+      
+    }
   });
   
 });

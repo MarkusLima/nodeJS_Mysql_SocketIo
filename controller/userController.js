@@ -1,4 +1,5 @@
 const { User } = require('../model/userModel');
+const { gerarLetrasAleatorias } = require('../config/tools');
 
 /**
  * @swagger
@@ -133,7 +134,8 @@ exports.add = async (req, res) => {
     try {
 
         const { name, email, password } = req.body;
-        const user = await User.create({ name, email, password });
+        var token = gerarLetrasAleatorias(45);
+        const user = await User.create({ name, email, password, token });
         return res.status(201).json(user);
 
     } catch (error) {

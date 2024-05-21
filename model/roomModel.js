@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { User, sequelize } = require('./userModel');
+const { gerarLetrasAleatorias } = require('../config/tools');
 
 // Definindo o modelo de Room
 const Room = sequelize.define('room', {
@@ -31,7 +32,8 @@ const CreateOrUpdate = async (data) => {
             existingRecord.uuid = data.uuid;
             await existingRecord.save();
         } else {
-            await Room.create( { userId:data.userId, uuid:data.uuid } );
+            var token = gerarLetrasAleatorias(45);
+            await Room.create( { userId:data.userId, uuid:data.uuid, token:token } );
         }
 
     }

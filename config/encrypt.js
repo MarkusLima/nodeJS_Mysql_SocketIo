@@ -1,10 +1,28 @@
 // Função para criptografar uma string usando AES
 exports.encryptAES = (text) => {
-    return btoa(text);
+    try {
+        
+        return btoa(text);
+
+    } catch (error) {
+
+        console.log(error)
+        return false;
+        
+    }
 }
   
 // Função para descriptografar uma string usando AES
 exports.decryptAES = (encryptedData) => {
-    return atob(encryptedData);
+    try {
+        
+        return atob(encryptedData);
+
+    } catch (error) {
+
+        console.log(error)
+        return false;
+
+    }
 }
   
