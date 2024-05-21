@@ -53,15 +53,15 @@ exports.login = async (req, res) => {
         });
 
         if (user) {
-          res.status(200).json({ hash: encryptAES(user.email), host: process.env.HOST +":"+ process.env.PORT +"/chat/"+ encryptAES(user.email) });
+          return res.status(200).json({ hash: encryptAES(user.email), host: process.env.HOST +":"+ process.env.PORT +"/chat/"+ encryptAES(user.email) });
         } else {
-          res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found' });
         }
 
     } catch (error) {
 
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
 
     }
 

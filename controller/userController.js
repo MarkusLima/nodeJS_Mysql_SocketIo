@@ -23,12 +23,12 @@ exports.list = async (req, res) => {
     try {
 
         const users = await User.findAll();
-        res.json(users);
+        return res.json(users);
 
     } catch (error) {
 
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
 
     }
 
@@ -94,15 +94,15 @@ exports.findId = async (req, res) => {
 
         const user = await User.findByPk(req.params.id);
         if (user) {
-          res.json(user);
+            return res.json(user);
         } else {
-            res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
     } catch (error) {
 
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
 
     }
 }
@@ -134,12 +134,12 @@ exports.add = async (req, res) => {
 
         const { name, email, password } = req.body;
         const user = await User.create({ name, email, password });
-        res.status(201).json(user);
+        return res.status(201).json(user);
 
     } catch (error) {
 
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
 
     }
 }
@@ -183,17 +183,17 @@ exports.up = async (req, res) => {
 
         const user = await User.findByPk(req.params.id);
         if (user) {
-          const { name, email, password } = req.body;
-          await user.update({ name, email, password });
-          res.json(user);
+            const { name, email, password } = req.body;
+            await user.update({ name, email, password });
+            return res.json(user);
         } else {
-          res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
     } catch (error) {
 
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
 
     }
 
@@ -226,11 +226,12 @@ exports.del = async (req, res) => {
     try {
 
         const user = await User.findByPk(req.params.id);
+        
         if (user) {
-          await user.destroy();
-          res.status(204).end();
+            await user.destroy();
+            return res.status(204).end();
         } else {
-          res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
     } catch (error) {

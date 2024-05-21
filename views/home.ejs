@@ -16,12 +16,17 @@
     <input type="hidden" name="id" value="<%= id %>" id="id">
     <input type="hidden" name="name" value="<%= name %>" id="name">
     <input type="hidden" name="email" value="<%= email %>" id="email">
+    <input type="hidden" name="isInRoom" value="<%= isInRoom %>" id="isInRoom">
 
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 bg-dark" style="height: 100vh;overflow-y: scroll;">
           <p class="text-white">USUARIOS NO CHAT</p>
-          <div id="container_user_in_chat"></div>
+          <div id="container_user_in_chat">
+            <% for(var i = 0; i < allUserInRoom.length; i++) { %>
+              <p class='text-info'><%= allUserInRoom[i].user.email %></p>
+            <% } %>
+          </div>
         </div>
         <div class="col-md-8" style="height: 100vh;overflow-y: scroll;position: relative;">
           <div id="container_msg_in_chat"></div>
@@ -37,11 +42,11 @@
       </div>
     </div>
 
-    <script
-      src="https://cdn.socket.io/3.1.3/socket.io.min.js"
-      integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" 
+      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" 
       crossorigin="anonymous"
     ></script>
+
     <script>
 
       var socketIo = io();
@@ -51,11 +56,22 @@
 
         var user = {};
         user.uuid = socketIo.id;
-        user.id = document.getElementById("id").value;
-        user.name = document.getElementById("name").value;
-        user.email = document.getElementById("email").value;
+        user.userId = document.getElementById("id").value;
+        user.isInRoom = document.getElementById("isInRoom").value;
 
         socketIo.emit("new_user", { user: user });
+      });
+
+      socketIo.on('disconnect_user', function (data) {
+        console.log(data);
+
+        document.getElementById("container_user_in_chat").innerHTML = "";
+        var container_user_in_chat = document.getElementById("container_user_in_chat");
+
+        for (let index = 0; index < data.length; index++) {
+          container_user_in_chat.innerHTML += "<p class='text-info'>"+data[index].user.email+"</p>";
+        }
+
       });
 
       socketIo.on('all_users', function (data) {
@@ -84,6 +100,11 @@
 
       socketIo.on('connect_error', function (err) {
         console.log('connection errror', err);
+      });
+
+      socketIo.on('auto_disconnect_user', function (data) {
+        console.log('auto_disconnect_user', data);
+        alert("Desconectado")
       });
 
       function sendMsg(){

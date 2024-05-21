@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const { sequelize } = require('../config/db');
 
-// Definindo o modelo de Usuário
+// Definindo o modelo de User
 const User = sequelize.define('user', {
     name: {
       type: DataTypes.STRING,
@@ -19,9 +19,4 @@ const User = sequelize.define('user', {
     }
 });
 
-(async () => {
-  await sequelize.sync();
-  console.log('Model user synchronized with database');
-})();
-
-module.exports = { User };
+module.exports = { User, sequelize };
